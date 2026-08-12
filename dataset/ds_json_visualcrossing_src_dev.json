@@ -5,6 +5,17 @@
 			"referenceName": "ls_http_visualcrossing_dev",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"city": {
+				"type": "string"
+			},
+			"date": {
+				"type": "string"
+			},
+			"apiKey": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "visualcrossing"
 		},
@@ -12,7 +23,11 @@
 		"type": "Json",
 		"typeProperties": {
 			"location": {
-				"type": "HttpServerLocation"
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@concat(dataset().city,'/',dataset().date, '?unitGroup=metric&key=', dataset().apiKey)",
+					"type": "Expression"
+				}
 			}
 		},
 		"schema": {}
