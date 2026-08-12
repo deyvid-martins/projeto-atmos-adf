@@ -1,0 +1,20 @@
+{
+	"name": "ds_json_visualcrossing_src_dev",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_http_visualcrossing_dev",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "visualcrossing"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		},
+		"schema": {}
+	}
+}
