@@ -73,6 +73,27 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "web_get_apikey",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://kv-atmos-dev-westus2-00.vault.azure.net/visualcrossing-api-key-dev/067556d873ce4bb085650e2488c8000b?api-version=2025-07-01",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://valt.azure.net/.default"
+					}
+				}
 			}
 		],
 		"parameters": {
