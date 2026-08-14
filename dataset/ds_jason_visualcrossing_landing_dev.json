@@ -29,7 +29,7 @@
 					"type": "Expression"
 				},
 				"folderPath": {
-					"value": "@concat(\n    'landing/visualcrossing/',\n    dataset().city,\n    '/year=', formatDateTime(dataset().data, 'yyyy'),\n    '/month=', formatDateTime(dataset().data, 'MM'),\n    '/day=', formatDateTime(dataset().data, 'dd')\n)",
+					"value": "@tolower(concat(\n    'landing/visualcrossing/',\n    dataset().city,\n    '/year=', formatDateTime(dataset().data, 'yyyy'),\n    '/month=', formatDateTime(dataset().data, 'MM'),\n    '/day=', formatDateTime(dataset().data, 'dd'))\n)",
 					"type": "Expression"
 				},
 				"fileSystem": "atmos-landing-dev-001v2"

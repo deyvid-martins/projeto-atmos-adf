@@ -1,6 +1,88 @@
 {
 	"name": "pl_ingest_visualcrossing_landing_dev",
 	"properties": {
+		"activities": [
+			{
+				"name": "copy_visualcrossing_to_landing",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_json_visualcrossing_src_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"city": {
+								"value": "@pipeline().parameters.city",
+								"type": "Expression"
+							},
+							"date": {
+								"value": "@pipeline().parameters.date",
+								"type": "Expression"
+							},
+							"apiKey": "5LUTS74HCBY3TXN464XN3PRN9"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_jason_visualcrossing_landing_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"city": {
+								"value": "@pipeline().parameters.city",
+								"type": "Expression"
+							},
+							"data": {
+								"value": "@pipeline().parameters.date",
+								"type": "Expression"
+							},
+							"file_name": {
+								"value": "@tolower(concat('atmos_',pipeline().parameters.city,'_',formatDateTime(utcNow(),'yyyyMMddhhmmss'),'.json'))",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"city": {
+				"type": "string"
+			},
+			"date": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "visualcrossing"
 		},
