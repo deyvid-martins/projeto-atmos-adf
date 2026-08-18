@@ -131,7 +131,7 @@
 											"type": "Expression"
 										},
 										"file_name": {
-											"value": "@tolower(concat('atmos_',pipeline().parameters.id_estacao,'_',formatDateTime(utcNow(),'yyyyMMddhhmmss'),'.parquet'))",
+											"value": "@tolower(concat('atmos_',pipeline().parameters.id_estacao,'_',string(item()),formatDateTime(utcNow(),'yyyyMMddhhmmss'),'.parquet'))",
 											"type": "Expression"
 										}
 									}
