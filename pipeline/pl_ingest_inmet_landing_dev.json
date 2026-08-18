@@ -133,6 +133,10 @@
 										"file_name": {
 											"value": "@tolower(concat('atmos_',pipeline().parameters.id_estacao,'_',string(item()),formatDateTime(utcNow(),'yyyyMMddhhmmss'),'.parquet'))",
 											"type": "Expression"
+										},
+										"id_estacao": {
+											"value": "@pipeline().parameters.id_estacao",
+											"type": "Expression"
 										}
 									}
 								}
