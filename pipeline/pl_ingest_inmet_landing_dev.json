@@ -129,6 +129,10 @@
 										"ano": {
 											"value": "@item()",
 											"type": "Expression"
+										},
+										"file_name": {
+											"value": "@tolower(concat('atmos_',pipeline().parameters.id_estacao,'_',formatDateTime(utcNow(),'yyyyMMddhhmmss'),'.parquet'))",
+											"type": "Expression"
 										}
 									}
 								}
