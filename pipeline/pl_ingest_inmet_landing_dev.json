@@ -1,0 +1,170 @@
+{
+	"name": "pl_ingest_inmet_landing_dev",
+	"properties": {
+		"activities": [
+			{
+				"name": "web_get_apikey",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://kv-atmos-dev-westus2-00.vault.azure.net/secrets/visualcrossing-api-key-dev/067556d873ce4bb085650e2488c8000b?api-version=7.4",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			},
+			{
+				"name": "set_year_list",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "web_get_apikey",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "year_list",
+					"value": {
+						"value": "@range(pipeline().parameters.startYear, add(sub(pipeline().parameters.endYear, pipeline().parameters.startYear), 1))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "foreach_ano",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "set_year_list",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('year_list')",
+						"type": "Expression"
+					},
+					"batchCount": 5,
+					"activities": [
+						{
+							"name": "copy_inmet_to_landing",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "GoogleBigQueryV2Source",
+									"query": {
+										"value": "@concat('SELECT * FROM `basedosdados.br_inmet_bdmep.microdados` WHERE id_estacao = ''',pipeline().parameters.id_estacao,''' AND ano = ',string(item()))",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "adf_bigquery_inmet_src_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"id_estacao": {
+											"value": "@pipeline().parameters.id_estacao",
+											"type": "Expression"
+										},
+										"ano": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_parquet_inmet_landing_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"ano": {
+											"value": "@item()",
+											"type": "Expression"
+										},
+										"file_name": {
+											"value": "@tolower(concat('atmos_',pipeline().parameters.id_estacao,'_',string(item()),'_',formatDateTime(utcNow(),'yyyyMMddhhmmss'),'.parquet'))",
+											"type": "Expression"
+										},
+										"id_estacao": {
+											"value": "@pipeline().parameters.id_estacao",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"id_estacao": {
+				"type": "string"
+			},
+			"startYear": {
+				"type": "int"
+			},
+			"endYear": {
+				"type": "int"
+			}
+		},
+		"variables": {
+			"year_list": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "INMET"
+		},
+		"annotations": []
+	}
+}

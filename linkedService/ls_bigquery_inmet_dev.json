@@ -1,0 +1,20 @@
+{
+	"name": "ls_bigquery_inmet_dev",
+	"properties": {
+		"annotations": [],
+		"type": "GoogleBigQueryV2",
+		"version": "1.1",
+		"typeProperties": {
+			"projectId": "atmos-505916",
+			"authenticationType": "ServiceAuthentication",
+			"keyFileContent": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_akv_atmos_dev",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "adf-bigquery-reader"
+			}
+		}
+	}
+}

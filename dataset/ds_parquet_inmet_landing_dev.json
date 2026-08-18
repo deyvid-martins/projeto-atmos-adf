@@ -1,0 +1,41 @@
+{
+	"name": "ds_parquet_inmet_landing_dev",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adlsg2_atmos_dev",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ano": {
+				"type": "string"
+			},
+			"file_name": {
+				"type": "string"
+			},
+			"id_estacao": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "INMET"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().file_name",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@toLower(\n    concat('landing/inmet/microdados',dataset().id_estacao,\n    '/ano=',\n    dataset().ano\n    \n\n\n\n\n))",
+					"type": "Expression"
+				},
+				"fileSystem": "atmos-landing-dev-001v2"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
