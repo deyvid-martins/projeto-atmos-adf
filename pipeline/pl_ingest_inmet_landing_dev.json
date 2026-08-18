@@ -1,0 +1,32 @@
+{
+	"name": "pl_ingest_inmet_landing_dev",
+	"properties": {
+		"activities": [
+			{
+				"name": "web_get_apikey",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://kv-atmos-dev-westus2-00.vault.azure.net/secrets/visualcrossing-api-key-dev/067556d873ce4bb085650e2488c8000b?api-version=7.4",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "INMET"
+		},
+		"annotations": []
+	}
+}
