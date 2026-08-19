@@ -262,10 +262,12 @@ O projeto **Atmos ADF** tem como objetivo construir um ecossistema de ingestão 
 
 ## 🎯 Próximos Passos do Projeto (Roadmap Técnico)
 
-1. **Camada Bronze / Silver no Azure Databricks:**
-   - Consumo dos arquivos brutos (JSON e Parquet) gravados na *Landing Zone*.
-   - Tratamento de valores nulos, deduplicação e conversão de tipos de dados usando PySpark/Delta Lake.
-2. **Modelagem Multidimensional (Camada Gold):**
-   - Criação de tabelas Fato e Dimensão relacionando os dados atuais e históricos de clima.
-3. **Analytics & Visualização (Power BI):**
+1. **Camada Bronze / Silver / Gold no Azure Databricks:**
+   - Acesse o repositório do Databricks: 🔗 [projeto-atmos-databricks-elt](https://github.com/deyvid-martins/projeto-atmos-databricks-elt)
+   - Leitura dos arquivos da *Landing Zone*, higienização, criação de tabelas Delta e modelagem *Star Schema*.
+
+2. **Analytics & Visualização (Power BI):**
    - Conexão via DirectQuery/Import para elaboração de dashboards interativos de análise climática.
+---
+  
+   
