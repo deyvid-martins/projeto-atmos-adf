@@ -14,6 +14,9 @@
 			},
 			"id_estacao": {
 				"type": "string"
+			},
+			"tipo_dado": {
+				"type": "string"
 			}
 		},
 		"folder": {
@@ -29,7 +32,7 @@
 					"type": "Expression"
 				},
 				"folderPath": {
-					"value": "@toLower(concat('landing/inmet/microdados/id_estacao=', dataset().id_estacao, '/ano=', string(dataset().ano)))",
+					"value": "@toLower(concat('landing/inmet/', dataset().tipo_dado, '/id_estacao=', dataset().id_estacao, '/ano=', string(dataset().ano)))",
 					"type": "Expression"
 				},
 				"fileSystem": "atmos-landing-dev-001v2"
