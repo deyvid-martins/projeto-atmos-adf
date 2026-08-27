@@ -24,11 +24,75 @@
 				}
 			},
 			{
+				"name": "copy_estacao_to_landing",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "web_get_apikey",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "GoogleBigQueryV2Source",
+						"query": {
+							"value": "SELECT * FROM `basedosdados.br_inmet_bdmep.estacao`",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "adf_bigquery_inmet_src_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"id_estacao": "geral",
+							"ano": 2020
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_parquet_inmet_landing_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"tipo_dado": "estacao",
+							"id_estacao": "geral",
+							"ano": "2020",
+							"file_name": {
+								"value": "@tolower(concat('atmos_estacao_', formatDateTime(utcNow(), 'yyyyMMddHHmmss'), '.parquet'))",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
 				"name": "set_year_list",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "web_get_apikey",
+						"activity": "copy_estacao_to_landing",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -95,15 +159,7 @@
 										"type": "ParquetWriteSettings"
 									}
 								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
+								"enableStaging": false
 							},
 							"inputs": [
 								{
@@ -115,7 +171,7 @@
 											"type": "Expression"
 										},
 										"ano": {
-											"value": "@item()",
+											"value": "@string(item())",
 											"type": "Expression"
 										}
 									}
@@ -126,16 +182,17 @@
 									"referenceName": "ds_parquet_inmet_landing_dev",
 									"type": "DatasetReference",
 									"parameters": {
+										"tipo_dado": "microdados",
+										"id_estacao": {
+											"value": "@pipeline().parameters.id_estacao",
+											"type": "Expression"
+										},
 										"ano": {
-											"value": "@item()",
+											"value": "@string(item())",
 											"type": "Expression"
 										},
 										"file_name": {
 											"value": "@tolower(concat('atmos_',pipeline().parameters.id_estacao,'_',string(item()),'_',formatDateTime(utcNow(),'yyyyMMddhhmmss'),'.parquet'))",
-											"type": "Expression"
-										},
-										"id_estacao": {
-											"value": "@pipeline().parameters.id_estacao",
 											"type": "Expression"
 										}
 									}
