@@ -194,14 +194,14 @@ O projeto **Atmos ADF** tem como objetivo construir um ecossistema de ingestão 
 #### **Etapa 16 e 17 — Configuração do Google Cloud Platform (GCP) e Mapeamento dos Dados Públicos do INMET**
 - **O que foi feito:**
   1. Criação do projeto `atmos-505916` na GCP.
-  2. Consulta do dataset público `basedosdados.br_inmet_bdmep.microdados` via BigQuery Studio para validação dos dados da estação meteorológica `A014` (Goiás).
+  2. Consulta do dataset público `basedosdados.br_inmet_bdmep.microdados` via BigQuery Studio para validação dos dados da estação meteorológica `A001` (Brasilia).
 - **Consulta de Validação SQL:**
   ```sql
   SELECT 
     ano,
     COUNT(*) AS total_registros
   FROM `basedosdados.br_inmet_bdmep.microdados`
-  WHERE id_estacao = 'A014'
+  WHERE id_estacao = 'A001'
   GROUP BY ano
   ORDER BY ano;
   ```
