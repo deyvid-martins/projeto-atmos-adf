@@ -146,7 +146,7 @@
 								"source": {
 									"type": "GoogleBigQueryV2Source",
 									"query": {
-										"value": "@concat('SELECT * FROM `basedosdados.br_inmet_bdmep.microdados` WHERE id_estacao = ''',pipeline().parameters.id_estacao,''' AND ano = ',string(item()))",
+										"value": "@concat('SELECT * FROM `basedosdados.br_inmet_bdmep.microdados` WHERE UPPER(id_estacao) = UPPER(''', trim(pipeline().parameters.id_estacao), ''') AND ano = ', string(item()))",
 										"type": "Expression"
 									}
 								},
